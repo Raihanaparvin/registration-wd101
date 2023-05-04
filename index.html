@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registration Form</title>
+    <script>
+      function validateForm() {
+        var name = document.forms["regForm"]["name"].value;
+        var email = document.forms["regForm"]["email"].value;
+        var password = document.forms["regForm"]["password"].value;
+        var dob = document.forms["regForm"]["dob"].value;
+        var acceptTerms = document.forms["regForm"]["acceptTerms"].checked;
+
+        if (name == "" || email == "" || password == "" || dob == "" || !acceptTerms) {
+          alert("Please fill in all fields and accept the terms and conditions.");
+          return false;
+        }
+
+        // Add more validation rules here if needed.
+
+        return true;
+      }
+
+      function saveData() {
+        if (validateForm()) {
+          var name = document.forms["regForm"]["name"].value;
+          var email = document.forms["regForm"]["email"].value;
+          var password = document.forms["regForm"]["password"].value;
+          var dob = document.forms["regForm"]["dob"].value;
+
+          // Save data to local storage.
+          var users = JSON.parse(localStorage.getItem("users")) || [];
+          users.push({ name: name, email: email, password: password, dob: dob });
+          localStorage.setItem("users", JSON.stringify(users));
+
+          // Refresh table with updated data.
+          displayData();
+          
+          // Clear form.
+          document.getElementById("regForm").reset();
+
+          alert("Registration successful!");
+        }
+      }
+
+      function displayData() {
+        var users = JSON.parse(localStorage.getItem("users")) || [];
+        var table = document.getElementById("userTable");
+        table.innerHTML = "";
+
+        // Create table headers.
+        var row = table.insertRow(0);
+        var nameHeader = row.insertCell(0);
+        var emailHeader = row.insertCell(1);
+        var dobHeader = row.insertCell(2);
+
+        nameHeader.innerHTML = "<b>Name</b>";
+        emailHeader.innerHTML = "<b>Email</b>";
+        dobHeader.innerHTML = "<b>Date of Birth</b>";
+
+        // Add data rows to table.
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+          var row = table.insertRow(i + 1);
+          var nameCell = row.insertCell(0);
+          var emailCell = row.insertCell(1);
+          var dobCell = row.insertCell(2);
+
+          nameCell.innerHTML = user.name;
+          emailCell.innerHTML = user.email;
+          dobCell.innerHTML = user.dob;
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>Registration Form</h1>
+
+    <form name="regForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name"><br>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email"><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob"><br>
+
+      <input type="checkbox" id="acceptTerms" name="acceptTerms">
+      <label for="acceptTerms">I accept the terms and conditions.</label><br>
+
+      <input type="button" value="Submit" onclick="saveData()">
+    </form>
+
+    <table id="userTable" border="1">
+    </table>
+  </body>
+  
+  <script>
+    displayData();
+  </script>
+</html>
+
+
